@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Document</title>
+  <link rel="stylesheet" href="css/app.css">
+  <link rel="stylesheet" href="css/reset.css">
+  <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+  <link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1/themes/ui-lightness/jquery-ui.css" >
+</head>
+<body>
+  <section class="calculator">
+    <div class="inner">
+      <div class="disp">
+        <div>
+          <input type="text" readonly="readonly" id="ans" value=>
+        </div>
+        <div>
+          <input type="text" readonly="readonly" id="val" value=>
+        </div>
+      </div>
+      <div class="input clearfix">
+        <div class="input__number">
+          <ul class="clearfix">
+            <li><button value=7>7</button></li>
+            <li><button value=8>8</button></li>
+            <li><button value=9>9</button></li>
+            <li><button value=4>4</button></li>
+            <li><button value=5>5</button></li>
+            <li><button value=6>6</button></li>
+            <li><button value=1>1</button></li>
+            <li><button value=2>2</button></li>
+            <li><button value=3>3</button></li>
+          </ul>
+        </div>
+        <div class="input__symbol">
+          <div class="input__symbol__operation">
+            <ul class="clearfix">
+              <li><button value="+">+</button></li>
+              <li><button value="-">-</button></li>
+              <li><button value="*">*</button></li>
+              <li><button value="/">/</button></li>
+              <li><button value="0">0</button></li>
+              <li><button value="c">C</button></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <section>
+    <div class="calendar">
+      <div id="datepicker"></div>
+      <table class="calendar__table">
+      <div class="calendar__table__month">
+        <a class="calendar__table__back"><<</a>
+        <h2 class="calendar__title"></h2>
+        <a class="calendar__table__next">>></a>
+      </div>
+        <tr class="calendar__th">
+          <th>日</th>
+          <th>月</th>
+          <th>火</th>
+          <th>水</th>
+          <th>木</th>
+          <th>金</th>
+          <th>土</th>
+        </tr>
+      </table>
+  </section>
+</body>
+</html>
+
+<script src="js/jquery.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1/jquery-ui.min.js"></script>
+<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1/i18n/jquery.ui.datepicker-ja.min.js"></script>
+<script>
+  $(function() {
+    var mydata = 0;
+    var changeMonth = 0;
+    $('button').on('click', function() {
+      if($(this).val() < 10) {
+        if($('#val').val() === "0") {
+          $('#val').val("");
+        }
+        $('#val').val($('#val').val() + $(this).val());
+      }
+      else if($(this).val() === "+") {
+        mydata += parseInt($('#val').val(), 10);
+        result(mydata);
+      }
+      else if($(this).val() === "-") {
+        mydata -= parseInt($('#val').val(), 10);
+        console.log(mydata);
+        result(mydata);
+      }
+      else if($(this).val() === "/") {
+        if(mydata === 0) {
+          mydata = parseInt($('#val').val(), 10);
+        }
+        else {
+          mydata = Math.round(mydata / parseInt($('#val').val(), 10)) ;
+        }
+        result(mydata);
+      }
+      else if($(this).val() === "*") {
+        if(mydata === 0) {
+          mydata = parseInt($('#val').val(), 10);
+        }
+        else {
+          mydata = mydata * parseInt($('#val').val(), 10);
+        }
+        result(mydata);
+      }
+      else if($(this).val() === "c") {
+        $('#val').val(0);
+        $('#ans').val(0);
+        mydata = 0;
+      }
+    });
+
+    function result(mydata) {
+      $('#val').val(0);
+      $('#ans').val(mydata);
+      mydata = 0;
+    };
+
+    makeCalendar(changeMonth);
+    $('.calendar__table__back').on('click', function() {
+      changeMonth --;
+      console.log(changeMonth);
+      console.log('back');
+      makeCalendar(changeMonth);
+    });
+
+    $('.calendar__table__next').on('click', function() {
+      changeMonth ++;
+      console.log(changeMonth);
+      console.log('next');
+      makeCalendar(changeMonth);
+    });
+  });
+
+
+function makeCalendar(changeMonth) {
+  var monthTable = new Array(31,28,31,30,31,30,31,31,30,31,30,31);
+  var date = new Date();
+  var year = date.getFullYear();
+  var day = date.getDate();
+  var month = date.getMonth();
+  date.setDate(1);
+  date.setMonth(month+changeMonth);
+  var week = date.getDay();
+  var tableLine = Math.ceil((week+monthTable[month+changeMonth])/7);
+  var table = new Array(7*tableLine);
+
+  /* うるう年の計算 */
+  if (((year%4)==0 && (year%100)!=0) || (year%400)==0) {
+    monthTable[1] = 29;
+  }
+  for(i = 0; i < 7*tableLine ;i++) {
+    table[i] = "";
+  }
+  /* データ作成 */
+  for(i = 0; i < monthTable[month+changeMonth]; i++) {
+    table[i+week] = i+1;
+  }
+  /* タイトルの作成 */
+  var title = year + '年' + (month+1+changeMonth) + '月';
+  $('.calender__title').text("");
+  $('.calendar__title').text(title);
+  /* 日の作成 */
+  var data = "";
+  for(i = 0; i < tableLine; i++) {
+    data += '<tr class="calendar__td">';
+    for(c = 0; c < 7;c ++) {
+      if((table[c+i*7] === day) && (changeMonth === 0)) {
+        data += '<td class="calendar__td__now">' + table[c+i*7] + '</td>';
+      }
+      else {
+        data += '<td>' + table[c+i*7] + '</td>';
+      }
+    }
+    data += '</tr>'
+  }
+  $('.calendar__table').find('td').parent().empty();
+  $('.calendar__table').append(data);
+}
+</script>

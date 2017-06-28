@@ -1,0 +1,108 @@
+.clearfix::before,
+.clearfix::after {
+  display: block;
+  content: '';
+  clear: both; }
+
+body {
+  background-color: #f4f4f4;
+  box-sizing: border-box; }
+
+.inner {
+  width: 700px;
+  margin: 15px auto; }
+
+.calculator {
+  background-color: #7f7f7f; }
+
+.disp {
+  width: 400px;
+  margin: 0 auto;
+  background-color: #fff;
+  text-align: center; }
+  .disp input {
+    width: 400px;
+    height: 40px;
+    background-color: #1f1f1f;
+    color: #fff;
+    font-size: 20px;
+    text-align: right; }
+
+.input {
+  width: 600px;
+  margin: 0 auto; }
+  .input__number {
+    width: 58%;
+    box-sizing: border-box;
+    display: inline-block;
+    text-align: center;
+    padding: 0 0 15px 17%; }
+    .input__number ul li {
+      float: left;
+      margin: 0 10px 10px 0; }
+      .input__number ul li button {
+        width: 70px;
+        height: 70px;
+        font-size: 20px;
+        border-radius: 3%; }
+      .input__number ul li:nth-child(3n) {
+        margin-right: 0px; }
+  .input__symbol {
+    width: 35%;
+    text-align: center;
+    display: inline-block;
+    padding: 15px 0 15px 0; }
+    .input__symbol ul li {
+      float: left;
+      margin: 0 10px 10px 0; }
+      .input__symbol ul li button {
+        width: 70px;
+        height: 70px;
+        font-size: 20px;
+        border-radius: 3%; }
+    .input__symbol ul > li:nth-child(2n) {
+      margin-right: 0px; }
+    .input__symbol__decision button {
+      width: 35%;
+      font-size: 50px;
+      padding: 10px 50px; }
+
+.calendar {
+  background-color: #fff;
+  margin-bottom: 20px; }
+  .calendar__table {
+    text-align: center;
+    margin: 0 auto;
+    width: 700px; }
+    .calendar__table__back {
+      display: inline-block;
+      font-size: 25px; }
+    .calendar__table__next {
+      display: inline-block;
+      font-size: 25px; }
+    .calendar__table__month {
+      text-align: center; }
+      .calendar__table__month a:hover {
+        cursor: pointer; }
+  .calendar__title {
+    font-size: 30px;
+    width: 700px;
+    display: inline;
+    text-align: center; }
+  .calendar__th {
+    text-align: center;
+    font-weight: bold;
+    background-color: #afafaf; }
+    .calendar__th th {
+      padding: 5px;
+      border: solid 1px #000; }
+  .calendar__td {
+    background-color: #efefef; }
+    .calendar__td td {
+      height: 40px;
+      width: 40px;
+      text-align: left;
+      box-sizing: border-box;
+      border: solid 1px #000; }
+    .calendar__td__now {
+      background-color: orange; }
