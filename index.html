@@ -131,15 +131,19 @@
 
     $('.calendar__table__back').on('click', function() {
       changeMonth --;
-      console.log(changeMonth);
-      console.log('back');
+      if((changeMonth + makecalendar.month) <= 0) {
+        changeMonth += 12;
+        makecalendar.setYear(-1);
+      }
       makecalendar.renderView(changeMonth);
     });
 
     $('.calendar__table__next').on('click', function() {
       changeMonth ++;
-      console.log(changeMonth);
-      console.log('next');
+      if((changeMonth + makecalendar.month) >= 12) {
+        changeMonth -= 12;
+        makecalendar.setYear(1);
+      }
       makecalendar.renderView(changeMonth);
     });
   });
@@ -151,6 +155,8 @@ class Calendar {
     this.month = this.data.getMonth();
     this.day = this.data.getDate();
     this.lastday = new Date(this.year, this.month+1, 0).getDate();
+
+    this.getLastDay = this.getLastDay.bind(this);
   }
   getLastDay(changeMonth) {
     this.lastday = new Date(this.year, this.month+changeMonth+1, 0).getDate();
@@ -161,37 +167,50 @@ class Calendar {
     this.data.setMonth(this.month+changeMonth);
     return this.data.getDay();
   }
-  makeTable(tableLine,changeMonth) {
-    var table = new Array(7*tableLine);
-    for(var i = 0; i < 7*tableLine ;i++) {
-      table[i] = "";
-    }
-    for(var i = 0; i < this.getLastDay(changeMonth); i++) {
-      table[i+this.getWeek(changeMonth)] = i+1;
-    }
+  setYear(chageyear) {
+    this.year += chageyear;
+    this.data.setFullYear(this.year);
+  }
+  makeTable(tableLine, changeMonth) {
+    var table = [];
+
+    Array
+      .from(new Array(7 * tableLine))
+      .forEach((x, i) => table[i] = '');
+
+    Array
+      .from(new Array(this.getLastDay(changeMonth)))
+      .forEach((x, i) => table[i+this.getWeek(changeMonth)] = i+1);
+
     return table;
   }
   renderView(changeMonth) {
-    var tableLine = Math.ceil((this.getWeek(changeMonth)+this.getLastDay(changeMonth))/7);
-    var table = this.makeTable(tableLine,changeMonth);
+    const $instance = this;
+    const oneweekdays = 7;
+    var tableLine = Math.ceil(($instance.getWeek(changeMonth)+$instance.getLastDay(changeMonth))/oneweekdays);
+    var table = $instance.makeTable(tableLine,changeMonth);
     /* タイトルの作成 */
-    var title = this.year + '年' + (this.month+1+changeMonth) + '月';
+    var title = $instance.year + '年' + ($instance.month+1+changeMonth) + '月';
     $('.calender__title').text("");
     $('.calendar__title').text(title);
     /* 日の作成 */
     var data = "";
-    for(var i = 0; i < tableLine; i++) {
-      data += '<tr class="calendar__td">';
-      for(var c = 0; c < 7;c ++) {
-        if((table[c+i*7] === this.day) && (changeMonth === 0)) {
-          data += '<td class="calendar__td__now">' + table[c+i*7] + '</td>';
+    Array
+    .from(new Array(tableLine))
+    .forEach(function(x, i) {
+      data += '<tr class="caledar__td">';
+      Array
+      .from(new Array(oneweekdays))
+      .forEach(function(x, j) {
+        if((table[j+i*oneweekdays] === $instance.day) && (changeMonth === 0)) {
+          data += '<td class="calendar__td__now">' + table[j+i*oneweekdays] + '</td>';
         }
         else {
-          data += '<td>' + table[c+i*7] + '</td>';
+          data += '<td>' + table[j+i*oneweekdays] + '</td>';
         }
-      }
-      data += '</tr>'
-    }
+      });
+      data += '</tr>';
+    });
     $('.calendar__table').find('td').parent().empty();
     $('.calendar__table').append(data);
   }
